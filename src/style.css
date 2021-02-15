@@ -1,0 +1,119 @@
+html {
+  height: 100%;
+  background: black;
+}
+
+body {
+  margin: 0;
+  background: rgb(65, 64, 64);
+  color: rgb(6, 24, 80);
+  text-align: center;
+  height: 100%;
+}
+
+/* FLEXBOX LAYOUT */
+.flex-container {
+  display: flex;
+  justify-content: space-evenly;
+  width: 100%;
+}
+
+.box {
+  height: 50px;
+  background-color: red;
+  width: 50px;
+  margin: 5px;
+}
+
+/* GRID LAYOUT */
+.grid {
+  display: grid;
+  background-color: rgb(88, 88, 88);
+  grid-template-columns: 0.5fr 1fr 0.5fr;
+  grid-template-rows: repeat(3, 100px);
+  grid-gap: 1em;
+}
+
+header,
+aside,
+article,
+footer {
+  background: rgba(204, 204, 204, 0.609);
+  padding: 1em;
+}
+
+/* OPTION 1 SELECTING START AND END POINT*/
+/* #REGION css for making grid sizes, can be replaced entirely with the header, footer {} code below this region*/
+header {
+  /* Start on Row 1 */
+  grid-row: 1;
+  /* Start on the first column line and extend all the to the last column line */
+  grid-column: 1 / 4;
+}
+
+.sidebar-left {
+  /* Start on Row 2 */
+  grid-row: 2;
+  /* Start on the first column line and stop at the next column line */
+  grid-column: 1 / 2;
+}
+
+article {
+  /* Start on Row 2 */
+  grid-row: 2;
+  /* Start on the second column line and stop at the third column line */
+  grid-column: 2 / 3;
+}
+
+.sidebar-right {
+  /* Start on Row 2 */
+  grid-row: 2;
+  /* Start on the third column line and stop at the last column line */
+  grid-column: 3 / 4;
+}
+
+footer {
+  /* Start on Row 3, the last row */
+  grid-row: 3;
+  /* Start on the first column line and extend all the to the last column line */
+  grid-column: 1 / 4;
+}
+/* #endregion */
+
+/* OPTION 2 SHORTCUT OF OPTION 1*/
+header,
+footer {
+  grid-column: 1 / 4;
+}
+
+/* OPTION3 WITH TEMPLATE AREAS*/
+.grid {
+  display: grid;
+  background-color: rgb(88, 88, 88);
+  grid-gap: 1em;
+  grid-template-areas:
+  "header header header"
+  "sidebar content rightbar"
+  "footer footer footer " 
+  ;
+}
+
+header {
+  grid-area: header;
+}
+
+.sidebar-left {
+  grid-area: sidebar;
+}
+
+article {
+  grid-area: content;
+}
+
+.sidebar-right {
+  grid-area: rightbar;
+}
+
+footer {
+  grid-area: footer;
+}
