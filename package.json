@@ -8,6 +8,7 @@
     "@mikro-orm/core": "^4.4.2",
     "@mikro-orm/postgresql": "^4.4.2",
     "apollo-server-express": "^2.19.2",
+    "argon2": "^0.27.1",
     "express": "^4.17.1",
     "graphql": "^15.5.0",
     "init": "^0.1.2",
@@ -33,6 +34,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon dist/index.js",
     "start": "node dist/index.js",
+    "create:migration": "mikro-orm migration:create",
     "start2": "ts-node src/index.ts",
     "start2Comment": "old version of starting a ts project, slower because it hast to parse a ts file."
   },

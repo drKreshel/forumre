@@ -5,6 +5,7 @@ import express from "express";
 import { ApolloServer } from "apollo-server-express";
 import { buildSchema } from "type-graphql";
 import { PostResolver } from "./resolvers/post";
+import { UserResolver } from "./resolvers/user";
 //ANCHOR if app continues to have problems install and import "reflect-metadata"
 
 const main = async () => {
@@ -18,8 +19,8 @@ const main = async () => {
 
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
-      resolvers: [PostResolver],
-      validate: false, //NOTE Ben: buildSchema uses a custom validator, I don't like it.
+      resolvers: [PostResolver, UserResolver],
+      validate: false, //NOTE buildSchema uses a custom validator
     }),
     context: () => ({ em: orm.em }),
   });
