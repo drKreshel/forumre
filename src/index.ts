@@ -7,6 +7,10 @@ import { buildSchema } from "type-graphql";
 import { PostResolver } from "./resolvers/post";
 import { UserResolver } from "./resolvers/user";
 //ANCHOR if app continues to have problems install and import "reflect-metadata"
+//and yarn add -D @types/connect-redis
+import redis from "redis";
+import session from "express-session";
+import connectRedis from "connect-redis";
 
 const main = async () => {
   //connects to database
@@ -17,12 +21,35 @@ const main = async () => {
 
   const app = express();
 
+  //#region REDIS CONFIG //STUB
+  const RedisStore = connectRedis(session);
+  const redisClient = redis.createClient();
+  app.use(
+    session({
+      store: new RedisStore({
+        client: redisClient,
+        disableTouch: true, // manually added. Disables refresh of session cookie time upon user activity.
+      }),
+      secret: "ultraDog & superfluosCat",
+      resave: false,
+      name: "qid", // manually added
+      cookie: {
+        maxAge: 1000 * 60 * 60 * 24 * 365 * 10, // 10 years
+        httpOnly: true, // disallows front end js access to the cookie
+        secure: __prod__, // cookie will only work in https
+        sameSite: "lax", //https://actix.rs/actix-redis/actix_redis/enum.SameSite.html
+      },
+      saveUninitialized: false,
+    })
+  );
+  //#endregion
+
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
       resolvers: [PostResolver, UserResolver],
       validate: false, //NOTE buildSchema uses a custom validator
     }),
-    context: () => ({ em: orm.em }),
+    context: ({ req, res }) => ({ em: orm.em, req, res }),
   });
 
   apolloServer.applyMiddleware({ app });

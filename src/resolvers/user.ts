@@ -48,7 +48,7 @@ export class UserResolver {
   async register(
     //() => UsernamePasswordInput is infered by graphql so is not needed.
     @Arg("options", () => UsernamePasswordInput) options: UsernamePasswordInput, //InputTypes
-    @Ctx() { em }: MyContext
+    @Ctx() { em, req }: MyContext
   ): Promise<UserResponse> {
     //validations
     if (options.username.length <= 2) {
@@ -86,7 +86,10 @@ export class UserResolver {
           errors: [{ field: "username", message: "username already taken" }],
         };
       }
-    } 
+    }
+
+    //auto login after register
+    req.session.userId = user.id;
 
     return { user };
   }
@@ -95,9 +98,11 @@ export class UserResolver {
   async login(
     //() => UsernamePasswordInput is infered by graphql so is not needed.
     @Arg("options", () => UsernamePasswordInput) options: UsernamePasswordInput,
-    @Ctx() { em }: MyContext
+    @Ctx() { em, req }: MyContext
   ): Promise<UserResponse> {
     const user = await em.findOne(User, { username: options.username });
+    
+    //validations
     if (!user) {
       return {
         errors: [
@@ -119,7 +124,21 @@ export class UserResolver {
         ],
       };
     }
+    
+    //stores user id on session cookie to keep the user logged in
+    req.session.userId = user.id;
 
     return { user };
+  }
+
+  @Query(() => User, { nullable: true })
+  async me(@Ctx() { req, em }: MyContext) {
+    //if user not logged in
+    if (!req.session.userId) {
+      return null;
+    }
+
+    const user = await em.findOne(User, { id: req.session.userId });
+    return user;
   }
 }
