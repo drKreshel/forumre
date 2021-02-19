@@ -1,5 +1,0 @@
-Minuto del video en el que quede: 
-yarn watch (bundles changes into dist folder. (ts compiler))
-yarn dev "or" yarn start (executes bundle index.js)
-redis-cli to start redis server
-psql -U postgres -d lireddit (start postgres cli)

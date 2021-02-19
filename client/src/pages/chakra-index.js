@@ -7,12 +7,12 @@ import {
   ListItem,
 } from '@chakra-ui/react'
 import { CheckCircleIcon, LinkIcon } from '@chakra-ui/icons'
-import { Hero } from '../components/Hero'
-import { Container } from '../components/Container'
-import { Main } from '../components/Main'
-import { DarkModeSwitch } from '../components/DarkModeSwitch'
-import { CTA } from '../components/CTA'
-import { Footer } from '../components/Footer'
+import { Hero } from '../components/chakra-Hero'
+import { Container } from '../components/chakra-Container'
+import { Main } from '../components/chakra-Main'
+import { DarkModeSwitch } from '../components/chakra-DarkModeSwitch'
+import { CTA } from '../components/chakra-CTA'
+import { Footer } from '../components/chakra-Footer'
 
 const Index = () => (
   <Container height="100vh">
