@@ -50,6 +50,7 @@ export class UserResolver {
     @Arg("options", () => UsernamePasswordInput) options: UsernamePasswordInput, //InputTypes
     @Ctx() { em, req }: MyContext
   ): Promise<UserResponse> {
+    console.log("ENTRA A RUTA REGISTER");
     //validations
     if (options.username.length <= 2) {
       return {
@@ -101,7 +102,7 @@ export class UserResolver {
     @Ctx() { em, req }: MyContext
   ): Promise<UserResponse> {
     const user = await em.findOne(User, { username: options.username });
-    
+
     //validations
     if (!user) {
       return {
@@ -124,7 +125,7 @@ export class UserResolver {
         ],
       };
     }
-    
+
     //stores user id on session cookie to keep the user logged in
     req.session.userId = user.id;
 

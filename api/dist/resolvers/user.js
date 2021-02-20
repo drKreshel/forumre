@@ -70,6 +70,7 @@ FieldError = __decorate([
 let UserResolver = class UserResolver {
     register(options, { em, req }) {
         return __awaiter(this, void 0, void 0, function* () {
+            console.log("ENTRA A RUTA REGISTER");
             if (options.username.length <= 2) {
                 return {
                     errors: [
