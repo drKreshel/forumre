@@ -1,0 +1,4 @@
+yarn watch (bundles changes into dist folder. (ts compiler))
+yarn dev "or" yarn start (executes bundle index.js)
+redis-server to start redis server (on ubuntu)
+psql -U postgres -d forumre (start postgres cli)

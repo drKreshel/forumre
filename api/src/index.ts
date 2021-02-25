@@ -12,8 +12,6 @@ import redis from "redis";
 import session from "express-session";
 import connectRedis from "connect-redis";
 
-console.log("WAAA")
-
 const main = async () => {
   //connects to database
   const orm = await MikroORM.init(mikroOrmConfig);

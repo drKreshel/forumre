@@ -38,11 +38,11 @@
   "scripts": {
     "watch": "tsc -w",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon dist/index.js",
+    "dev": "start tsc -w && nodemon dist/index.js",
+    "dev2": "tsc -w & nodemon dist/index.js",
     "start": "node dist/index.js",
     "create:migration": "mikro-orm migration:create",
-    "start2": "ts-node src/index.ts",
-    "start2Comment": "old version of starting a ts project, slower because it hast to parse a ts file."
+    "start2": "ts-node src/index.ts" /* old version of starting a ts project, slower because it hast to parse a ts file. */
   },
   "author": "drKreshel",
   "license": "ISC"

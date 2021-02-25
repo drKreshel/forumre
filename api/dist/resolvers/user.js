@@ -70,11 +70,13 @@ FieldError = __decorate([
 let UserResolver = class UserResolver {
     register(options, { em, req }) {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log("ENTRA A RUTA REGISTER");
             if (options.username.length <= 2) {
                 return {
                     errors: [
-                        { field: "username", message: "length must be greater than 2" },
+                        {
+                            field: "username",
+                            message: "Username length must be greater than 2",
+                        },
                     ],
                 };
             }
@@ -83,27 +85,36 @@ let UserResolver = class UserResolver {
                     errors: [
                         {
                             field: "password",
-                            message: "password must have at least 8 characters, 1 uppercase and 1 number",
+                            message: "Password must have at least eight characters, one uppercase and one number",
                         },
                     ],
                 };
             }
             const hashedPassword = yield argon2_1.default.hash(options.password);
-            const user = em.create(User_1.User, {
+            let user;
+            const rawUser = {
                 username: options.username,
                 password: hashedPassword,
-            });
+                created_at: new Date(),
+                updated_at: new Date(),
+            };
             try {
-                yield em.persistAndFlush(user);
+                const result = yield em
+                    .createQueryBuilder(User_1.User)
+                    .getKnexQuery()
+                    .insert(rawUser)
+                    .returning("*");
+                const { id, username, password, created_at, updated_at } = result[0];
+                user = { id, username, password, createdAt: created_at, updatedAt: updated_at };
             }
             catch (error) {
                 if (error.code === "23505") {
                     return {
-                        errors: [{ field: "username", message: "username already taken" }],
+                        errors: [{ field: "username", message: "Username is already taken" }],
                     };
                 }
             }
-            req.session.userId = user.id;
+            req.session.userId = user === null || user === void 0 ? void 0 : user.id;
             return { user };
         });
     }
