@@ -6,7 +6,7 @@ import { MikroORM } from "@mikro-orm/core";
 
 export default {
   entities: [Post, User],
-  dbName: "lireddit",
+  dbName: "forumre",
   type: "postgresql",
   user: 'postgres',
   password: '1',
@@ -14,5 +14,5 @@ export default {
     path: path.join(__dirname, "./migrations"), // path to the folder with migrations
     pattern: /^[\w-]+\d+\.[tj]s$/, // regex pattern for the migration files
   },
-  debug: !__prod__, //__prod__ = process.env.NODE_ENV === "production"
+  debug: true // !__prod__, //__prod__ = process.env.NODE_ENV === "production"
 } as Parameters<typeof MikroORM.init>[0];

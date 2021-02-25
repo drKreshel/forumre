@@ -13,6 +13,7 @@ import argon2 from "argon2";
 import { MyContext } from "./../types";
 import { Post } from "./../entities/Post";
 import { User } from "./../entities/User";
+import { EntityManager } from "@mikro-orm/postgresql";
 
 //@Arg can be replaced with:
 @InputType()
@@ -50,12 +51,14 @@ export class UserResolver {
     @Arg("options", () => UsernamePasswordInput) options: UsernamePasswordInput, //InputTypes
     @Ctx() { em, req }: MyContext
   ): Promise<UserResponse> {
-    console.log("ENTRA A RUTA REGISTER");
     //validations
     if (options.username.length <= 2) {
       return {
         errors: [
-          { field: "username", message: "length must be greater than 2" },
+          {
+            field: "username",
+            message: "Username length must be greater than 2",
+          },
         ],
       };
     }
@@ -65,7 +68,7 @@ export class UserResolver {
           {
             field: "password",
             message:
-              "password must have at least 8 characters, 1 uppercase and 1 number",
+              "Password must have at least eight characters, one uppercase and one number",
           },
         ],
       };
@@ -73,24 +76,55 @@ export class UserResolver {
 
     //password hashing
     const hashedPassword = await argon2.hash(options.password);
-    const user = em.create(User, {
-      username: options.username,
-      password: hashedPassword,
-    });
 
     //saving user to database
+    /* #REGION saving user with mikro Orm*/
+    // const user = em.create(User, {
+    //   username: options.username,
+    //   password: hashedPassword,
+    // });
+    // console.log("🚀 ~ file: user.ts ~ line 87 ~ UserResolver ~ user", user)
+    // try {
+    //   await em.persistAndFlush(user);
+    //   console.log("🚀 ~ file: user.ts ~ line 91 ~ UserResolver ~ user", user)
+    // } catch (error) {
+    //   if (error.code === "23505") {
+    //     return {
+    //       errors: [{ field: "username", message: "Username is already taken" }],
+    //     };
+    //   }
+    // }
+    /* #endregion */
+
+    /* #REGION saving user with raw queries using Knex query builder */
+    let user;
+    const rawUser = {
+      username: options.username,
+      password: hashedPassword,
+      created_at: new Date(),
+      updated_at: new Date(),
+    };
     try {
-      await em.persistAndFlush(user);
+      const result = await (em as EntityManager)
+        .createQueryBuilder(User)
+        .getKnexQuery()
+        .insert(rawUser)
+        .returning("*"); //returns all the fields
+      const {id, username, password, created_at, updated_at} = result[0]
+  
+      //renaming created_at and updated_at fields to how entity expects them
+      user = { id, username, password, createdAt: created_at, updatedAt: updated_at }
     } catch (error) {
       if (error.code === "23505") {
         return {
-          errors: [{ field: "username", message: "username already taken" }],
+          errors: [{ field: "username", message: "Username is already taken" }],
         };
       }
     }
+    /* #endregion */
 
     //auto login after register
-    req.session.userId = user.id;
+    req.session.userId = user?.id;
 
     return { user };
   }

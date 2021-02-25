@@ -28,7 +28,7 @@ Trace:
 
 npm manifest: 
   {
-    "name": "reddit-clone-ben-awad",
+    "name": "forumre",
     "version": "1.0.0",
     "description": "",
     "main": "index.js",
