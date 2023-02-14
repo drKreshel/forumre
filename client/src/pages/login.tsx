@@ -20,10 +20,6 @@ export default function Login({}: Props): ReactElement {
         initialValues={{ username: "", password: "" }}
         onSubmit={async (values, actions) => {
           const response = await login({options: values});
-          console.log(
-            "🚀 ~ file: login.tsx ~ line 53 ~ onSubmit={ ~ response",
-            response
-          );
           if (response.data?.login.errors) {
             actions.setErrors(toErrorMap(response.data.login.errors));
           } else if (response.data?.login.user) {
